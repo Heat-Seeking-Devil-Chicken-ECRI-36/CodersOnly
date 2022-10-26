@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import Login from './Login.js';
 import SignUp from './SignUp';
@@ -15,7 +15,7 @@ import './stylesheets/style.css';
 const App = () => {
   const [currUser, setCurrUser] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
-  //const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     fetch('/api/friends')
@@ -24,6 +24,7 @@ const App = () => {
         setAllUsers(data);
       });
   }, []);
+
 
   return (
     <Routes>
@@ -39,6 +40,10 @@ const App = () => {
       <Route
         path="/Matches"
         element={<Matches currUser={currUser} allUsers={allUsers} />}
+      />
+      <Route
+        path="/signup"
+        element={<SignUp currUser={currUser} />}
       />
       <Route
         path="/CreateProfile"
