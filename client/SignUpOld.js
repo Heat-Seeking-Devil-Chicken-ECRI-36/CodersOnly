@@ -4,8 +4,7 @@ import { Link } from 'react';
 
 //fetch request ---->>>>
 const SignUp = (props) => {
-  //changed name from createUserHandler to "signUpHandler"
-  const signUpHandler = (e) => {
+  const createUserHandler = (e) => {
     e.preventDefault();
     const userObj = {};
     const inputs = document
@@ -14,9 +13,10 @@ const SignUp = (props) => {
         userObj[el.name] = el.value;
       });
 
-    // not sure if we should keep the 2 lines below on signup:
-    // userObj.matches = {};
-    // userObj.matches[userObj.username] = 'no';
+    const langType = document.querySelector('.proglangDropDown').value;
+    userObj.proglang = langType;
+    userObj.matches = {};
+    userObj.matches[userObj.username] = 'no';
 
     fetch('/api', {
       method: 'POST',
@@ -30,8 +30,6 @@ const SignUp = (props) => {
       })
       .then((data) => {
         console.log(data);
-        //state on Login.js
-        //we need this to not take us back to login -> it will need to redirect to CreateProfile.
         props.setToggleSignUp(false);
       });
   };
@@ -42,15 +40,40 @@ const SignUp = (props) => {
         <button onClick={() => props.setToggleSignUp(false)}>
           Back to Login
         </button>
-        <form className="SignUpForm">
-          {/* <form className="SignUpForm" onSubmit={signUpHandler}> */}
+        <form className="SignUpForm" onSubmit={createUserHandler}>
           <label>Username:</label>
           <input name="username" type="text" placeholder="Username"></input>
 
           <label>Password:</label>
           <input name="password" type="password" placeholder="Password"></input>
+
+          <label>Age:</label>
+          <input name="age" type="number" placeholder="Age" min="1"></input>
+
+          <label>State:</label>
+          <input name="location" type="text" placeholder="State"></input>
+
+          <label>Photo url:</label>
+          <input name="url" type="text" placeholder="url"></input>
+
+          <label>Programming Language:</label>
+          <select
+            className="proglangDropDown"
+            name="proglang"
+            type="text"
+            placeholder="Programming Language"
+          >
+            <option value="javascript">JavaScript</option>
+            <option value="java">Java</option>
+            <option value="python">Python</option>
+            <option value="C++">C++</option>
+            <option value="C#">C#</option>
+          </select>
+
+          <label>Bio:</label>
+          <input name="comment" type="text" placeholder="bio"></input>
         </form>
-        <button onClick={signUpHandler}>Sign Up</button>
+        <button onClick={createUserHandler}>Create Profile</button>
       </div>
     </div>
   );
