@@ -49,6 +49,9 @@ const Feed = (props) => {
       })
       .then((data) => {
         const { matches } = data;
+
+        console.log(matches);
+
         const nonRejectedUsers = props.allUsers.filter((el) => {
           if (!matches[el.username]) return true;
         });
@@ -60,7 +63,7 @@ const Feed = (props) => {
   return (
     <div>
       <Navbar />
-      <div className='feedDiv'>
+      <div className="feedDiv">
         {toggleMatchPopUp && (
           <MatchPopUp
             setToggleMatchPopUp={setToggleMatchPopUp}
@@ -68,7 +71,7 @@ const Feed = (props) => {
           />
         )}
         <FeedItem user={currUserFeed[currIndex]} />
-        <div className='feedBtns'>
+        <div className="feedBtns">
           <button onClick={yesHandler}>Yes</button>
           <button onClick={noHandler}>No</button>
         </div>
