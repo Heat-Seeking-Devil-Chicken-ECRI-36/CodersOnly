@@ -15,6 +15,7 @@ import './stylesheets/style.css';
 const App = () => {
   const [currUser, setCurrUser] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
+  //const navigate = useNavigate();
 
   useEffect(() => {
     fetch('/api/friends')
