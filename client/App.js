@@ -6,6 +6,7 @@ import Profile from './Profile';
 import Feed from './Feed';
 import UpdateProfile from './components/UpdateProfile';
 import Matches from './Matches';
+import CreateProfile from './CreateProfile.js';
 
 //imported stylesheet
 import './stylesheets/style.css';
@@ -26,17 +27,21 @@ const App = () => {
   return (
     <Routes>
       <Route
-        path='/'
+        path="/"
         element={<Login currUser={currUser} setCurrUser={setCurrUser} />}
       />
       <Route
-        path='/Feed'
+        path="/Feed"
         element={<Feed currUser={currUser} allUsers={allUsers} />}
       />
-      <Route path='/Profile' element={<Profile currUser={currUser} />} />
+      <Route path="/Profile" element={<Profile currUser={currUser} />} />
       <Route
-        path='/Matches'
+        path="/Matches"
         element={<Matches currUser={currUser} allUsers={allUsers} />}
+      />
+      <Route
+        path="/CreateProfile"
+        element={<CreateProfile currUser={currUser} />}
       />
     </Routes>
   );

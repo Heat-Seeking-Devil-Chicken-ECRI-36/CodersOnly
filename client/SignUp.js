@@ -1,6 +1,7 @@
 import React from 'react';
 import './stylesheets/SignUp.css';
 import { Link } from 'react';
+import { Route, useNavigate } from 'react-router-dom';
 
 //fetch request ---->>>>
 const SignUp = (props) => {
@@ -18,6 +19,8 @@ const SignUp = (props) => {
     // userObj.matches = {};
     // userObj.matches[userObj.username] = 'no';
 
+    const navigate = useNavigate();
+
     fetch('/api', {
       method: 'POST',
       headers: {
@@ -31,8 +34,9 @@ const SignUp = (props) => {
       .then((data) => {
         console.log(data);
         //state on Login.js
+        navigate('/CreateProfile');
         //we need this to not take us back to login -> it will need to redirect to CreateProfile.
-        props.setToggleSignUp(false);
+        //props.setToggleSignUp(false);
       });
   };
 
