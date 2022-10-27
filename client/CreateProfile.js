@@ -24,7 +24,7 @@ const CreateProfile = (props) => {
     // userObj.matches = {};
     // userObj.matches[userObj.username] = 'no';
 
-    fetch(`/api/${118}/createProfile`, {
+    fetch(`/api/${props.currUser}/createProfile`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

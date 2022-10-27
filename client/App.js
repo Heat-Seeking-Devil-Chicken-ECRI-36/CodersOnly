@@ -27,9 +27,9 @@ function reducer(state, action) {
 
 //rendering profile here just for now before we add routers
 const App = () => {
-  const [currUser, setCurrUser] = useState(4);
+  const [currUser, setCurrUser] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(131);
   // const navigate = useNavigate();
   const initialState = {
     userId: null,
@@ -47,26 +47,26 @@ const App = () => {
 
   return (
     <Routes>
-      <UserContext.Provider value="">
+      {/* <UserContext.Provider value=""> */}
         <Route
           path="/"
           element={<Login currUser={currUser} setCurrUser={setCurrUser} />}
         />
         <Route
           path="/Feed"
-          element={<Feed currUser={currUser} allUsers={allUsers} />}
+          element={<Feed currUser={currUser} allUsers={allUsers} userId={userId}/>}
         />
-        <Route path="/Profile" element={<Profile currUser={currUser} />} />
+        <Route path="/Profile" element={<Profile currUser={currUser} userId={userId}/>} />
         <Route
           path="/Matches"
-          element={<Matches currUser={currUser} allUsers={allUsers} />}
+          element={<Matches currUser={currUser} allUsers={allUsers} userId={userId}/>}
         />
         <Route
           path="/signup"
-          element={<SignUp currUser={currUser} initialState={initialState} />}
+          element={<SignUp currUser={currUser} initialState={initialState} userId={userId} />}
         />
-        <Route path="/CreateProfile" element={<CreateProfile />} />
-      </UserContext.Provider>
+        <Route path="/CreateProfile" element={<CreateProfile />} currUser={currUser} userId={userId}/>
+      {/* </UserContext.Provider> */}
     </Routes>
   );
 };

@@ -31,7 +31,7 @@ const Login = (props) => {
           //since setCurrUser here isnt actually updating the state
           //need to figure out a way to dispatch data to store so that the user_id can be available to every other component 
           //useReducer hook??
-          // props.setCurrUser(data.user_id);
+          props.setCurrUser(data.user_id);
         }
       });
   };

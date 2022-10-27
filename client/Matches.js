@@ -8,7 +8,7 @@ const Matches = (props) => {
 
   useEffect(() => {
     //fetch request to the endpoint of matches
-    fetch(`/api/${props.currUser}/matches`)
+    fetch(`/api/${props.userId}/matches`)
       .then((data) => data.json())
       .then((data) => {
         //props.allUser contains all user profiles, el is another users profile
@@ -25,9 +25,10 @@ const Matches = (props) => {
         const matchesArr = data;
         console.log(matchesArr);
         const matchesItemsArr = matchesArr.map((el) => {
+          console.log(el);
           //displays on matches page all the matches that also said yes to you
           //however there are repeating users and the information of the matched user isnt loading
-          return <MatchesItem key={el._id} user={el} />;
+          return <MatchesItem key={el._id} user={el[0]} />;
         });
 
         setUserMatches(matchesItemsArr);
