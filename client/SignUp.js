@@ -1,46 +1,127 @@
-import React from 'react';
+// import React from 'react';
+// import './stylesheets/SignUp.css';
+// import { Link } from 'react';
+
+// //fetch request ---->>>>
+// const SignUp = (props) => {
+//   const createUserHandler = (e) => {
+//     e.preventDefault();
+//     const userObj = {};
+//     const inputs = document
+//       .querySelectorAll('.SignUpForm input')
+//       .forEach((el) => {
+//         userObj[el.name] = el.value;
+//       });
+
+//     const langType = document.querySelector('.proglangDropDown').value;
+//     userObj.proglang = langType;
+//     userObj.matches = {};
+//     userObj.matches[userObj.username] = 'no';
+
+//     fetch('/api', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(userObj),
+//     })
+//       .then((data) => {
+//         return data.json();
+//       })
+//       .then((data) => {
+//         console.log(data);
+//         props.setToggleSignUp(false);
+//       });
+//   };
+
+//   return (
+//     <div className='SignUpDiv'>
+//       <div className='SignUp'>
+//         <button onClick={() => props.setToggleSignUp(false)}>
+//           Back to Login
+//         </button>
+//         <form className='SignUpForm' onSubmit={createUserHandler}>
+//           <label>Username:</label>
+//           <input name='username' type='text' placeholder='Username'></input>
+
+//           <label>Password:</label>
+//           <input name='password' type='password' placeholder='Password'></input>
+
+//           <label>Name:</label>
+//           <input name='name' type='text' placeholder='Name'></input>
+
+//           <label>Age:</label>
+//           <input name='age' type='number' placeholder='Age' min='1'></input>
+
+//           <label>State:</label>
+//           <input name='location' type='text' placeholder='State'></input>
+
+//           <label>Photo url:</label>
+//           <input name='url' type='text' placeholder='url'></input>
+
+//           <label>Programming Language:</label>
+//           <select
+//             className='proglangDropDown'
+//             name='proglang'
+//             type='text'
+//             placeholder='Programming Language'
+//           >
+//             <option value='javascript'>JavaScript</option>
+//             <option value='java'>Java</option>
+//             <option value='python'>Python</option>
+//             <option value='C++'>C++</option>
+//             <option value='C#'>C#</option>
+//           </select>
+
+//           <label>Bio:</label>
+//           <input name='comment' type='text' placeholder='bio'></input>
+//         </form>
+//         <button onClick={createUserHandler}>Create Profile</button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default SignUp;
+
+
+
+
+
+
+
+import React, {useEffect, useState} from 'react';
 import './stylesheets/SignUp.css';
 import { Link } from 'react';
-import { Route, useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
+import axios from 'axios';
+import { STATES } from 'mongoose';
 
-//fetch request ---->>>>
-const SignUp = (props) => {
+// fetch request ---->>>>
+
+
+
+
+const SignUp = () => {  
+  const [userId, setUserId] = useState(null);
   //changed name from createUserHandler to "signUpHandler"
-  const signUpHandler = (e) => {
-    e.preventDefault();
-    const userObj = {};
-    const inputs = document
-      .querySelectorAll('.SignUpForm input')
-      .forEach((el) => {
-        userObj[el.name] = el.value;
-      });
+  let id;
+  const navigate = useNavigate();
+  const sendUser = async (user, pass) => {
+    // console.log(user, pass)
+    const userData = { username: user, password: pass };
+    const response = await axios.post('/api/', userData);
+    // all the data associated with that username
+    const data = response.data;
+    id = data;
+    // create route to create profile page
+    //console.log(typeof data)
+    //console.log('state', userId)
 
-    // not sure if we should keep the 2 lines below on signup:
-    // userObj.matches = {};
-    // userObj.matches[userObj.username] = 'no';
-
-    const navigate = useNavigate();
-
-    fetch('/api', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userObj),
-    })
-      .then((data) => {
-        return data.json();
-      })
-      .then((data) => {
-        console.log(data);
-        //state on Login.js
-        //props.navigate('/CreateProfile');
-        //we need this to not take us back to login -> it will need to redirect to CreateProfile.
-        props.setToggleSignUp(false);
-      });
+    
   };
-
-  return (
+  // navigate('/CreateProfile')
+    return (
     <div className="SignUpDiv">
       <div className="SignUp">
         <button onClick={() => props.setToggleSignUp(false)}>
@@ -49,12 +130,20 @@ const SignUp = (props) => {
         <form className="SignUpForm">
           {/* <form className="SignUpForm" onSubmit={signUpHandler}> */}
           <label>Username:</label>
-          <input name="username" type="text" placeholder="Username"></input>
+          <input id='username' name="username" type="text" placeholder="Username"></input>
 
           <label>Password:</label>
-          <input name="password" type="password" placeholder="Password"></input>
+          <input id='password' name="password" type="password" placeholder="Password"></input>
         </form>
-        <button onClick={signUpHandler}>Sign Up</button>
+        <button onClick={()=>{
+          const user = document.getElementById('username');
+          const pass = document.getElementById('password');
+          setUserId(sendUser(user.value, pass.value));
+        }}>Sign Up</button>
+        {console.log('143',userId)}
+        {userId !== null && (
+          <Navigate to='/createProfile' userId={userId}/>
+        )}
       </div>
     </div>
   );
