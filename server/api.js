@@ -6,9 +6,10 @@ router.post('/verification', controller.verifyUser, (req, res) => {
   return res.status(201).json(res.locals.userInfo);
 });
 
-// router.get('/:id', controller.getUser, (req, res) => {
-//   return res.status(201).json(res.locals.userInfo);
-// });
+//get userinfo after loggin in
+router.get('/:id', controller.getUser, (req, res) => {
+  return res.status(200).json(res.locals.userInfo[0]);
+});
 
 router.post('/', controller.createUser, (req, res) => {
   return res.status(201).json(res.locals.userId);
@@ -29,7 +30,7 @@ router.patch('/:id/editProfile', controller.editProfile, (req, res) => {
 })
 
 //delete profile
-router.delete('/:id/editProfile', controller.deleteProfile, (req, res) => {
+router.delete('/:id/deleteProfile', controller.deleteProfile, (req, res) => {
   return res.status(201).send('deleted');
 })
 

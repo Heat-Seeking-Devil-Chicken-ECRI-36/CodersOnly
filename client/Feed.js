@@ -10,28 +10,34 @@ const Feed = (props) => {
   const [currIndex, setCurrIndex] = useState(0);
   const [currUserFeed, setCurrUserFeed] = useState([]);
   const [toggleMatchPopUp, setToggleMatchPopUp] = useState(false);
+  console.log('in feed', props.allUsers);
+  console.log(props.currUser)
 
   const yesHandler = () => {
     const clickedUser = document.querySelector('#userName').textContent;
 
-    fetch(`/api/${props.currUser}/${clickedUser}/yes`, {
-      method: 'PATCH',
+    fetch(`/api/${props.currUser}/yes`, {
+      method: 'POST',
+      body: JSON.stringify({matches_id: clickedUser})
     })
       .then((data) => {
         return data.json();
       })
       .then((data) => {
-        setToggleMatchPopUp(data);
-        if (!data) {
+        // setToggleMatchPopUp(data);
+        // if (!data) {
           setCurrIndex((prevState) => prevState + 1);
-        }
+        // }
       });
   };
 
+  //rejected user!!
   const noHandler = (e) => {
+    //definitely need to fix no handle to maybe cached the users that a rejected into a cache obj and setCurrIndex to the next;
     const clickedUser = document.querySelector('#userName').textContent;
-    fetch(`/api/${props.currUser}/${clickedUser}/no`, {
-      method: 'PATCH',
+    fetch(`/api/${props.currUser}/yes`, {
+      method: 'post',
+      body: JSON.stringify({matches_id: clickedUser})
     })
       .then((data) => {
         return data.json();
@@ -43,22 +49,25 @@ const Feed = (props) => {
   };
 
   useEffect(() => {
-    fetch(`/api/${props.currUser}`)
+    fetch(`/api/${props.currUser}/friends`)
       .then((data) => {
         return data.json();
       })
       .then((data) => {
-        const { matches } = data;
-
-        console.log(matches);
-
-        const nonRejectedUsers = props.allUsers.filter((el) => {
-          if (!matches[el.username]) return true;
-        });
-        setCurrUserFeed(nonRejectedUsers);
-        console.log(nonRejectedUsers);
+        // const { matches } = data;
+        // console.log(matches);
+        // const nonRejectedUsers = props.allUsers.filter((el) => {
+        //   if (!matches[el.username]) return true;
+        // });
+        
+        //need to figure out a way to cache users that are rejected so it doesn't keep repeating;
+        //displays all the user in our database not including the user themself
+        setCurrUserFeed(data);
+        // console.log(nonRejectedUsers);
       });
   }, []);
+
+  
 
   return (
     <div>

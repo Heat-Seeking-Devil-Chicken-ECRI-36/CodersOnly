@@ -71,22 +71,25 @@ controller.createProfile = async (req, res, next) => {
   }
 };
 // change functionality to be for all instances of matches with value of not 'no' (or 'yes' and null)
-// controller.getUser = async (req, res, next) => {
-//   try {
-//     console.log("ID ", req.params);
-//     const { username } = req.params;
-//     res.locals.user = await User.findOne({ username }).exec();
-//     return next();
-//   } catch (err) {
-//     return next({
-//       log: `controller.js: ERROR: ${err}`,
-//       status: 400,
-//       message: {
-//         err: "An error occurred in controller.getUser. Check server logs for more details",
-//       },
-//     });
-//   }
-// };
+controller.getUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    console.log('id:', id)
+    const text = `select * from user_info where user_id = ${id}`
+    userInfo = await models.query(text);
+    res.locals.userInfo = userInfo.rows;
+    console.log(res.locals.userInfo[0])
+    return next();
+  } catch (err) {
+    return next({
+      log: `controller.js: ERROR: ${err}`,
+      status: 400,
+      message: {
+        err: "An error occurred in controller.getUser. Check server logs for more details",
+      },
+    });
+  }
+};
 
 // controller.updateUser = async (req, res, next) => {
 //   try {
@@ -111,12 +114,15 @@ controller.verifyUser = async (req, res, next) => {
     const text = `select * from user_login where username='${username}' and password='${password}'`;
     const userInDb = await models.query(text);
     const dbId = userInDb.rows[0].user_id;
+    console.log(dbId);
     if (userInDb) {
+      console.log(userInDb)
       const text = `select age, location, prolang, comment, url, name from user_info where user_id = ${dbId}`;
       const userInDbInfo = await models.query(text);
-      // console.log(userInDbInfo.rows)
+      const dataObj = userInDbInfo.rows[0];
+      dataObj.user_id = dbId;
       res.locals.userInfo = userInDbInfo.rows[0];
-      console.log("res", res.locals.userInfo);
+      // console.log("res", res.locals.userInfo);
     }
     // found ? (res.locals.userExists = true) : (res.locals.userExists = false);
     return next();
