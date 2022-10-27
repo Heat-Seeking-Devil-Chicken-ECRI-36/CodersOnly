@@ -71,22 +71,25 @@ controller.createProfile = async (req, res, next) => {
   }
 };
 // change functionality to be for all instances of matches with value of not 'no' (or 'yes' and null)
-// controller.getUser = async (req, res, next) => {
-//   try {
-//     console.log("ID ", req.params);
-//     const { username } = req.params;
-//     res.locals.user = await User.findOne({ username }).exec();
-//     return next();
-//   } catch (err) {
-//     return next({
-//       log: `controller.js: ERROR: ${err}`,
-//       status: 400,
-//       message: {
-//         err: "An error occurred in controller.getUser. Check server logs for more details",
-//       },
-//     });
-//   }
-// };
+controller.getUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    console.log('id:', id)
+    const text = `select * from user_info where user_id = ${id}`
+    userInfo = await models.query(text);
+    res.locals.userInfo = userInfo.rows;
+    console.log(res.locals.userInfo[0])
+    return next();
+  } catch (err) {
+    return next({
+      log: `controller.js: ERROR: ${err}`,
+      status: 400,
+      message: {
+        err: "An error occurred in controller.getUser. Check server logs for more details",
+      },
+    });
+  }
+};
 
 // controller.updateUser = async (req, res, next) => {
 //   try {
@@ -111,12 +114,15 @@ controller.verifyUser = async (req, res, next) => {
     const text = `select * from user_login where username='${username}' and password='${password}'`;
     const userInDb = await models.query(text);
     const dbId = userInDb.rows[0].user_id;
+    console.log(dbId);
     if (userInDb) {
+      console.log(userInDb)
       const text = `select age, location, prolang, comment, url, name from user_info where user_id = ${dbId}`;
       const userInDbInfo = await models.query(text);
-      // console.log(userInDbInfo.rows)
+      const dataObj = userInDbInfo.rows[0];
+      dataObj.user_id = dbId;
       res.locals.userInfo = userInDbInfo.rows[0];
-      console.log("res", res.locals.userInfo);
+      // console.log("res", res.locals.userInfo);
     }
     // found ? (res.locals.userExists = true) : (res.locals.userExists = false);
     return next();
@@ -197,6 +203,93 @@ controller.deleteProfile = async (req, res, next) => {
     });
   }
 };
+
+
+controller.yesMatch = async (req,res,next) => {
+  try {
+    const { id } = req.params;
+    const { matches_id } = req.body;
+    const text = `insert into matches values (${matches_id}, ${id})`;
+    await models.query(text);
+    return next();
+  } catch (err) {
+    return next({
+      log: `controller.js: ERROR: ${err}`,
+      status: 400,
+      message: {
+        err: "An error occurred in controller.yesMatch. Check server logs for more details",
+      },
+    })
+  }
+}
+
+controller.allMatches = async (req,res,next) => {
+  try {
+    const { id } = req.params;
+    //const { matches_id } = req.body;
+    const text = `SELECT m1.matches_id, m1.user_id from matches as m1 join matches as m2 on m1.matches_id = m2.user_id where m1.user_id = ${id};`;
+    const matches = await models.query(text);
+    const data = matches.rows
+    
+    const matchesId = [];
+    data.forEach(el => matchesId.push(el.matches_id))
+    //console.log(matchesId)
+    res.locals.matchesId = matchesId
+    //console.log(res.locals.matchesId)
+    // const matchesInfo = [];
+    // matchesId.forEach((element)=> {
+    //   console.log('inside foreach')
+    //   const promise = new Promise((resolve, reject) => {
+    //     console.log('inside promise')
+    //     const text2 = `select * from user_info where user_id = ${element}`
+    //     const newData = models.query(text2)
+    //     .then(data => matchesInfo.push(data))
+    //   })
+    // })
+    // console.log(matchesInfo)
+    // console.log(matchesData)
+    // console.log(data)
+    return next();
+  } catch (err) {
+    return next({
+      log: `controller.js: ERROR: ${err}`,
+      status: 400,
+      message: {
+        err: "An error occurred in controller.yesMatch. Check server logs for more details",
+      },
+    })
+  }
+}
+
+controller.getMatchInfo = async (req,res,next) => {
+  //console.log(res.locals.matchesId)
+  try{
+    const matchesId = res.locals.matchesId
+    console.log(matchesId)
+    const matchesInfo = [];
+    for (const element of matchesId){
+      console.log('element', element)
+      const text2 = `select * from user_info where user_id = ${element}`;
+      const newData = await models.query(text2)
+      console.log('newData', newData.rows)
+      matchesInfo.push(newData.rows)
+    }
+    // console.log(matchesInfo)
+    res.locals.matchesInfo = matchesInfo;
+    console.log(res.locals.matchesInfo)
+    return next();
+  }
+  catch(err){
+    return next({
+      log: `controller.js: ERROR: ${err}`,
+      status: 400,
+      message: {
+        err: "An error occurred in controller.getMatchesInfo. Check server logs for more details",
+      },
+    }) 
+  }
+}
+
 // controller to update user's matches
 controller.updateUserMatches = async (req, res, next) => {
   try {

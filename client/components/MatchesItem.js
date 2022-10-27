@@ -6,7 +6,10 @@ const MatchesItem = (props) => {
   if (!props.user) {
     return <p>You have no matches xD</p>;
   }
+  //maybe there are no data showing because we haven't actually added any user_info for the matched user
+  //not sure but will need to find out
   const { username, age, location, comment, proglang, url } = props.user;
+  console.log('in matchesitem', props.user)
   return (
     <div className='matchesContainer'>
       <div className='username'>

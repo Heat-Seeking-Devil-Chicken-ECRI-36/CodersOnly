@@ -1,5 +1,5 @@
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import Login from './Login.js';
 import SignUp from './SignUp';
 import Profile from './Profile';
@@ -11,9 +11,22 @@ import CreateProfile from './CreateProfile.js';
 //imported stylesheet
 import './stylesheets/style.css';
 
+
+const initialState = {userId: null};
+
+function reducer(state, action) {
+  switch(action.type){
+    case 'login':
+      userId = action.payload
+      return {...state.userId, userId}
+  }
+}
+
+
+
 //rendering profile here just for now before we add routers
 const App = () => {
-  const [currUser, setCurrUser] = useState(false);
+  const [currUser, setCurrUser] = useState(4);
   const [allUsers, setAllUsers] = useState([]);
   const [userId, setUserId] = useState(null);
   // const navigate = useNavigate();
@@ -21,20 +34,25 @@ const App = () => {
     userId: null,
   }
 
+  //fetching all the users to display on feed
+  //not sure why they are fetching the data here since we haven't even logged in yet?
   useEffect(() => {
-    fetch('/api/friends')
+    fetch(`/api/${currUser}/friends`)
       .then((response) => response.json())
       .then((data) => {
         setAllUsers(data);
       });
   }, []);
 
+  console.log('all user', allUsers);
+
+
 
   return (
     <Routes>
       <Route
         path="/"
-        element={<Login currUser={currUser} setCurrUser={setCurrUser} />}
+        element={<Login currUser={currUser} setCurrUser={setCurrUser} setUserId={setUserId}/>}
       />
       <Route
         path="/Feed"
