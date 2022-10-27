@@ -1,11 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './stylesheets/SignUp.css';
 import { Link } from 'react';
 import SignUp from './SignUp';
+import { Navigate } from 'react-router-dom';
 
-//fetch request ---->>>>
+//fetch request ---->>>> 
 //changes from "SignUp" to "CreateProfile"
 const CreateProfile = (props) => {
+  const [createProfile, setToggleCreateProfile] = useState(false);
   const createUserHandler = (e) => {
     e.preventDefault();
     const userObj = {};
@@ -17,11 +19,12 @@ const CreateProfile = (props) => {
       });
 
     const langType = document.querySelector('.proglangDropDown').value;
-    userObj.proglang = langType;
-    userObj.matches = {};
-    userObj.matches[userObj.username] = 'no';
+    userObj.proglang = langType.toString();
+    console.log(userObj)
+    // userObj.matches = {};
+    // userObj.matches[userObj.username] = 'no';
 
-    fetch('/api', {
+    fetch(`/api/${118}/createProfile`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -33,7 +36,7 @@ const CreateProfile = (props) => {
       })
       .then((data) => {
         console.log(data);
-        props.setToggleSignUp(false);
+        setToggleCreateProfile(true);
       });
   };
 
@@ -44,6 +47,8 @@ const CreateProfile = (props) => {
           Back to Login
         </button>
         <form className="SignUpForm" onSubmit={createUserHandler}>
+        <label>Name:</label>
+          <input name="name" type="text" placeholder="Name"></input>
           <label>Age:</label>
           <input name="age" type="number" placeholder="Age" min="1"></input>
 
@@ -71,6 +76,7 @@ const CreateProfile = (props) => {
           <input name="comment" type="text" placeholder="bio"></input>
         </form>
         <button onClick={createUserHandler}>Create Profile</button>
+        {createProfile && ( <Navigate to='/feed' />)}
       </div>
     </div>
   );

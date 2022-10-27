@@ -15,7 +15,11 @@ import './stylesheets/style.css';
 const App = () => {
   const [currUser, setCurrUser] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
+  const [userId, setUserId] = useState(null);
   // const navigate = useNavigate();
+  const initialState = {
+    userId: null,
+  }
 
   useEffect(() => {
     fetch('/api/friends')
@@ -43,11 +47,11 @@ const App = () => {
       />
       <Route
         path="/signup"
-        element={<SignUp currUser={currUser} />}
+        element={<SignUp currUser={currUser} initialState={initialState} />}
       />
       <Route
         path="/CreateProfile"
-        element={<CreateProfile currUser={currUser} />}
+        element={<CreateProfile/>}
       />
     </Routes>
   );

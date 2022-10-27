@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from './components/NavBar';
 import './stylesheets/Profile.css';
+import axios from 'axios';
 
 //need to fetch our profile data from the database to fill in our profile
 const Profile = (props) => {
@@ -15,16 +16,24 @@ const Profile = (props) => {
   });
 
   useEffect(() => {
-    fetch(`/api/${props.currUser}`)
+    fetch(`/api/${118}`)
       .then((data) => {
         return data.json();
       })
       .then((data) => {
         setProfileData(data);
+        console.log('profile', profileData);
       });
   }, []);
 
-  console.log(profileData);
+  useEffect(() => {
+    async () => {
+      const response = await axios.get('/api/118');
+      console.log(response)
+    }
+  })
+
+  
 
   const { username, age, location, comment, proglang, url } = profileData;
 

@@ -4,6 +4,25 @@ const models = require("./userModel");
 
 const controller = {};
 
+controller.getUser = async (req, res, next) => {
+  const {name, age, location, bio, prolang} = req.body
+  const {id} = req.params
+  try{
+    const text = `Select * from user_info where user_id = ${id}`;
+    await models.query(text);
+    res.locals.userInfo = req.body;
+  }
+  catch(err){
+    return next({
+      log: `controller.js: ERROR: ${err}`,
+      status: 400,
+      message: {
+        err: "An error occurred in controller.createUser. Check server logs for more details",
+      },
+    });
+  }
+}
+
 controller.createUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
@@ -31,10 +50,12 @@ controller.createUser = async (req, res, next) => {
 };
 
 controller.createProfile = async (req, res, next) => {
-  const { id } = req.params;
+  // const id = res.locals.userId
+  const {id} = req.params;
   // console.log(id);
   try {
     const { age, location, prolang, comment, url, name } = req.body;
+    console.log(prolang)
     const text = `insert into user_info values (${id}, '${name}', ${age}, '${location}', '${prolang}', '${comment}', '${url}', ${id})`;
     await models.query(text);
     res.locals.userInfo = req.body;
@@ -50,22 +71,22 @@ controller.createProfile = async (req, res, next) => {
   }
 };
 // change functionality to be for all instances of matches with value of not 'no' (or 'yes' and null)
-controller.getUser = async (req, res, next) => {
-  try {
-    console.log("ID ", req.params);
-    const { username } = req.params;
-    res.locals.user = await User.findOne({ username }).exec();
-    return next();
-  } catch (err) {
-    return next({
-      log: `controller.js: ERROR: ${err}`,
-      status: 400,
-      message: {
-        err: "An error occurred in controller.getUser. Check server logs for more details",
-      },
-    });
-  }
-};
+// controller.getUser = async (req, res, next) => {
+//   try {
+//     console.log("ID ", req.params);
+//     const { username } = req.params;
+//     res.locals.user = await User.findOne({ username }).exec();
+//     return next();
+//   } catch (err) {
+//     return next({
+//       log: `controller.js: ERROR: ${err}`,
+//       status: 400,
+//       message: {
+//         err: "An error occurred in controller.getUser. Check server logs for more details",
+//       },
+//     });
+//   }
+// };
 
 // controller.updateUser = async (req, res, next) => {
 //   try {
