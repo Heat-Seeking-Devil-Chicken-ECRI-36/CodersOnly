@@ -7,6 +7,7 @@ import Feed from './Feed';
 import UpdateProfile from './components/UpdateProfile';
 import Matches from './Matches';
 import CreateProfile from './CreateProfile.js';
+import { UserContext } from './UserContext.js';
 
 //imported stylesheet
 import './stylesheets/style.css';
@@ -32,7 +33,7 @@ const App = () => {
   // const navigate = useNavigate();
   const initialState = {
     userId: null,
-  }
+  };
 
   //fetching all the users to display on feed
   //not sure why they are fetching the data here since we haven't even logged in yet?
@@ -44,33 +45,28 @@ const App = () => {
       });
   }, []);
 
-  console.log('all user', allUsers);
-
-
-
   return (
     <Routes>
-      <Route
-        path="/"
-        element={<Login currUser={currUser} setCurrUser={setCurrUser} setUserId={setUserId}/>}
-      />
-      <Route
-        path="/Feed"
-        element={<Feed currUser={currUser} allUsers={allUsers} />}
-      />
-      <Route path="/Profile" element={<Profile currUser={currUser} />} />
-      <Route
-        path="/Matches"
-        element={<Matches currUser={currUser} allUsers={allUsers} />}
-      />
-      <Route
-        path="/signup"
-        element={<SignUp currUser={currUser} initialState={initialState} />}
-      />
-      <Route
-        path="/CreateProfile"
-        element={<CreateProfile/>}
-      />
+      <UserContext.Provider value="">
+        <Route
+          path="/"
+          element={<Login currUser={currUser} setCurrUser={setCurrUser} />}
+        />
+        <Route
+          path="/Feed"
+          element={<Feed currUser={currUser} allUsers={allUsers} />}
+        />
+        <Route path="/Profile" element={<Profile currUser={currUser} />} />
+        <Route
+          path="/Matches"
+          element={<Matches currUser={currUser} allUsers={allUsers} />}
+        />
+        <Route
+          path="/signup"
+          element={<SignUp currUser={currUser} initialState={initialState} />}
+        />
+        <Route path="/CreateProfile" element={<CreateProfile />} />
+      </UserContext.Provider>
     </Routes>
   );
 };
