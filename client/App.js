@@ -7,6 +7,7 @@ import Feed from './Feed';
 import UpdateProfile from './components/UpdateProfile';
 import Matches from './Matches';
 import CreateProfile from './CreateProfile.js';
+import { UserContext } from './UserContext.js';
 
 //imported stylesheet
 import './stylesheets/style.css';
@@ -19,7 +20,7 @@ const App = () => {
   // const navigate = useNavigate();
   const initialState = {
     userId: null,
-  }
+  };
 
   useEffect(() => {
     fetch('/api/friends')
@@ -29,30 +30,28 @@ const App = () => {
       });
   }, []);
 
-
   return (
     <Routes>
-      <Route
-        path="/"
-        element={<Login currUser={currUser} setCurrUser={setCurrUser} />}
-      />
-      <Route
-        path="/Feed"
-        element={<Feed currUser={currUser} allUsers={allUsers} />}
-      />
-      <Route path="/Profile" element={<Profile currUser={currUser} />} />
-      <Route
-        path="/Matches"
-        element={<Matches currUser={currUser} allUsers={allUsers} />}
-      />
-      <Route
-        path="/signup"
-        element={<SignUp currUser={currUser} initialState={initialState} />}
-      />
-      <Route
-        path="/CreateProfile"
-        element={<CreateProfile/>}
-      />
+      <UserContext.Provider value="">
+        <Route
+          path="/"
+          element={<Login currUser={currUser} setCurrUser={setCurrUser} />}
+        />
+        <Route
+          path="/Feed"
+          element={<Feed currUser={currUser} allUsers={allUsers} />}
+        />
+        <Route path="/Profile" element={<Profile currUser={currUser} />} />
+        <Route
+          path="/Matches"
+          element={<Matches currUser={currUser} allUsers={allUsers} />}
+        />
+        <Route
+          path="/signup"
+          element={<SignUp currUser={currUser} initialState={initialState} />}
+        />
+        <Route path="/CreateProfile" element={<CreateProfile />} />
+      </UserContext.Provider>
     </Routes>
   );
 };
