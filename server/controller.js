@@ -197,6 +197,93 @@ controller.deleteProfile = async (req, res, next) => {
     });
   }
 };
+
+
+controller.yesMatch = async (req,res,next) => {
+  try {
+    const { id } = req.params;
+    const { matches_id } = req.body;
+    const text = `insert into matches values (${matches_id}, ${id})`;
+    await models.query(text);
+    return next();
+  } catch (err) {
+    return next({
+      log: `controller.js: ERROR: ${err}`,
+      status: 400,
+      message: {
+        err: "An error occurred in controller.yesMatch. Check server logs for more details",
+      },
+    })
+  }
+}
+
+controller.allMatches = async (req,res,next) => {
+  try {
+    const { id } = req.params;
+    //const { matches_id } = req.body;
+    const text = `SELECT m1.matches_id, m1.user_id from matches as m1 join matches as m2 on m1.matches_id = m2.user_id where m1.user_id = ${id};`;
+    const matches = await models.query(text);
+    const data = matches.rows
+    
+    const matchesId = [];
+    data.forEach(el => matchesId.push(el.matches_id))
+    //console.log(matchesId)
+    res.locals.matchesId = matchesId
+    //console.log(res.locals.matchesId)
+    // const matchesInfo = [];
+    // matchesId.forEach((element)=> {
+    //   console.log('inside foreach')
+    //   const promise = new Promise((resolve, reject) => {
+    //     console.log('inside promise')
+    //     const text2 = `select * from user_info where user_id = ${element}`
+    //     const newData = models.query(text2)
+    //     .then(data => matchesInfo.push(data))
+    //   })
+    // })
+    // console.log(matchesInfo)
+    // console.log(matchesData)
+    // console.log(data)
+    return next();
+  } catch (err) {
+    return next({
+      log: `controller.js: ERROR: ${err}`,
+      status: 400,
+      message: {
+        err: "An error occurred in controller.yesMatch. Check server logs for more details",
+      },
+    })
+  }
+}
+
+controller.getMatchInfo = async (req,res,next) => {
+  //console.log(res.locals.matchesId)
+  try{
+    const matchesId = res.locals.matchesId
+    console.log(matchesId)
+    const matchesInfo = [];
+    for (const element of matchesId){
+      console.log('element', element)
+      const text2 = `select * from user_info where user_id = ${element}`;
+      const newData = await models.query(text2)
+      console.log('newData', newData.rows)
+      matchesInfo.push(newData.rows)
+    }
+    // console.log(matchesInfo)
+    res.locals.matchesInfo = matchesInfo;
+    console.log(res.locals.matchesInfo)
+    return next();
+  }
+  catch(err){
+    return next({
+      log: `controller.js: ERROR: ${err}`,
+      status: 400,
+      message: {
+        err: "An error occurred in controller.getMatchesInfo. Check server logs for more details",
+      },
+    }) 
+  }
+}
+
 // controller to update user's matches
 controller.updateUserMatches = async (req, res, next) => {
   try {

@@ -33,6 +33,15 @@ router.delete('/:id/editProfile', controller.deleteProfile, (req, res) => {
   return res.status(201).send('deleted');
 })
 
+//press yes to matches
+router.post('/:id/yes', controller.yesMatch, (req, res) => {
+  return res.status(201).send('yes');
+})
+
+router.get('/:id/matches', controller.allMatches, controller.getMatchInfo, (req, res) => {
+  return res.status(201).json(res.locals.matchesInfo)
+})
+
 
 // router.get('/:username', controller.getUser, (req, res) => {
 //   // console.log('res.locals.users ' + res.locals.user);
