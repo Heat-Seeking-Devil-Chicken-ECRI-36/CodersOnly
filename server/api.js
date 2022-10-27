@@ -6,9 +6,9 @@ router.post('/verification', controller.verifyUser, (req, res) => {
   return res.status(201).json(res.locals.userInfo);
 });
 
-router.get('/:id', controller.getUser, (req, res) => {
-  return res.status(201).json(res.locals.userInfo);
-});
+// router.get('/:id', controller.getUser, (req, res) => {
+//   return res.status(201).json(res.locals.userInfo);
+// });
 
 router.post('/', controller.createUser, (req, res) => {
   return res.status(201).json(res.locals.userId);
