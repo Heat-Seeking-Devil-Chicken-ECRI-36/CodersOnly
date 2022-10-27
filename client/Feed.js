@@ -16,7 +16,7 @@ const Feed = (props) => {
   const yesHandler = () => {
     const clickedUser = document.querySelector('#userName').textContent;
 
-    fetch(`/api/${props.currUser}/yes`, {
+    fetch(`/api/${props.userId}/yes`, {
       method: 'POST',
       body: JSON.stringify({matches_id: clickedUser})
     })

@@ -8,7 +8,7 @@ router.post('/verification', controller.verifyUser, (req, res) => {
 
 //get userinfo after loggin in
 router.get('/:id', controller.getUser, (req, res) => {
-  return res.status(200).json(res.locals.userInfo[0]);
+  return res.status(200).json(res.locals.userInfo);
 });
 
 router.post('/', controller.createUser, (req, res) => {

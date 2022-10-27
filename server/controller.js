@@ -5,7 +5,7 @@ const models = require("./userModel");
 const controller = {};
 
 controller.getUser = async (req, res, next) => {
-  const {name, age, location, bio, prolang} = req.body
+  const {name, age, location, bio, proglangi} = req.body
   const {id} = req.params
   try{
     const text = `Select * from user_info where user_id = ${id}`;
@@ -54,9 +54,9 @@ controller.createProfile = async (req, res, next) => {
   const {id} = req.params;
   // console.log(id);
   try {
-    const { age, location, prolang, comment, url, name } = req.body;
-    console.log(prolang)
-    const text = `insert into user_info values (${id}, '${name}', ${age}, '${location}', '${prolang}', '${comment}', '${url}', ${id})`;
+    const { age, location, proglang, comment, url, name } = req.body;
+    console.log(proglangi)
+    const text = `insert into user_info values (${id}, '${name}', ${age}, '${location}', '${proglang}', '${comment}', '${url}', ${id})`;
     await models.query(text);
     res.locals.userInfo = req.body;
     return next();
@@ -164,9 +164,9 @@ controller.getFriends = async (req, res, next) => {
 
 controller.editProfile = async (req, res, next) => {
   const { id } = req.params;
-  const { name, age, location, prolang, comment, url } = req.body;
+  const { name, age, location, proglangi, comment, url } = req.body;
   try {
-    const text = `update user_info set name= '${name}', age = ${age}, location = '${location}', prolang = '${prolang}', comment='${comment}', url='${url}' where user_id = ${id}`;
+    const text = `update user_info set name= '${name}', age = ${age}, location = '${location}', proglangi = '${proglangi}', comment='${comment}', url='${url}' where user_id = ${id}`;
     const updatedInfo = await models.query(text);
     console.log(updatedInfo);
     res.locals.updatedProfile = req.body;
@@ -265,8 +265,11 @@ controller.getMatchInfo = async (req,res,next) => {
   //console.log(res.locals.matchesId)
   try{
     const matchesId = res.locals.matchesId
-    console.log(matchesId)
+    console.log('matchesId', matchesId)
     const matchesInfo = [];
+    // const text2 = `select * from user_info where user_id = ${matchesId}`;
+    // const newData = await models.query(text2)
+    // console.log(newData.rows)
     for (const element of matchesId){
       console.log('element', element)
       const text2 = `select * from user_info where user_id = ${element}`;
@@ -274,7 +277,7 @@ controller.getMatchInfo = async (req,res,next) => {
       console.log('newData', newData.rows)
       matchesInfo.push(newData.rows)
     }
-    // console.log(matchesInfo)
+    console.log(matchesInfo)
     res.locals.matchesInfo = matchesInfo;
     console.log(res.locals.matchesInfo)
     return next();
