@@ -84,27 +84,23 @@
 
 // export default SignUp;
 
-
-
-
-
-
-
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './stylesheets/SignUp.css';
 import { Link } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { STATES } from 'mongoose';
+import { UserContext } from './UserContext';
 
 // fetch request ---->>>>
 
-
-
-
-const SignUp = () => {  
-  const [userId, setUserId] = useState(null);
+const SignUp = () => {
+  //declared on app
+  //const [userId, setUserId] = useState(null);
   //changed name from createUserHandler to "signUpHandler"
+
+  const { userId, setUserId } = useContext(UserContext);
+
   let id;
   const navigate = useNavigate();
   const sendUser = async (user, pass) => {
@@ -117,11 +113,9 @@ const SignUp = () => {
     // create route to create profile page
     //console.log(typeof data)
     //console.log('state', userId)
-
-    
   };
   // navigate('/CreateProfile')
-    return (
+  return (
     <div className="SignUpDiv">
       <div className="SignUp">
         <button onClick={() => props.setToggleSignUp(false)}>
@@ -130,20 +124,32 @@ const SignUp = () => {
         <form className="SignUpForm">
           {/* <form className="SignUpForm" onSubmit={signUpHandler}> */}
           <label>Username:</label>
-          <input id='username' name="username" type="text" placeholder="Username"></input>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            placeholder="Username"
+          ></input>
 
           <label>Password:</label>
-          <input id='password' name="password" type="password" placeholder="Password"></input>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Password"
+          ></input>
         </form>
-        <button onClick={()=>{
-          const user = document.getElementById('username');
-          const pass = document.getElementById('password');
-          setUserId(sendUser(user.value, pass.value));
-        }}>Sign Up</button>
-        {console.log('143',userId)}
-        {userId !== null && (
-          <Navigate to='/createProfile' userId={userId}/>
-        )}
+        <button
+          onClick={() => {
+            const user = document.getElementById('username');
+            const pass = document.getElementById('password');
+            setUserId(sendUser(user.value, pass.value));
+          }}
+        >
+          Sign Up
+        </button>
+        {console.log('143', userId)}
+        {userId !== null && <Navigate to="/createProfile" userId={userId} />}
       </div>
     </div>
   );
